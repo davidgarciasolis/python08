@@ -1,0 +1,34 @@
+Ex0 - Entering the Matrix
+
+He hecho el ejercicio con un script sencillo y fácil de leer.
+
+Cómo detecta el entorno:
+- Comparo `sys.prefix` con `sys.base_prefix`.
+- Si son distintos, significa que el programa está dentro de un entorno virtual.
+- Si son iguales, el programa está usando el Python global.
+
+Qué muestra el programa:
+- La ruta del intérprete actual con `sys.executable`.
+- El nombre del entorno virtual usando `os.path.basename(sys.prefix)`.
+- La ruta del entorno actual.
+- La ruta de instalación de paquetes del entorno actual.
+- La ruta de instalación de paquetes global.
+
+Cómo calculo las rutas:
+- Uso una función pequeña llamada `package_path(prefix)`.
+- Construyo la ruta con `os.path.join`.
+- Así el programa funciona también en Windows y en Unix.
+
+Qué imprime según el caso:
+- Fuera del entorno virtual, avisa de que se está usando el entorno global y muestra cómo crear y activar un `venv`.
+- Dentro del entorno virtual, muestra que el entorno está aislado y enseña la ruta del paquete instalado dentro del `venv`.
+
+Comprobaciones realizadas:
+- `python3 ex0/construct.py`
+- `python3 -m py_compile ex0/construct.py`
+- `python3 -m flake8 ex0/construct.py`
+- `python3 -m mypy --strict ex0/construct.py`
+
+Prueba adicional:
+- Creé un entorno virtual temporal con `python3 -m venv /tmp/matrix_env_test`.
+- Ejecuté el script dentro de ese entorno para confirmar que detecta correctamente el `venv`.
