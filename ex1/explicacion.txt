@@ -1,0 +1,91 @@
+Ex1 - Loading Programs
+
+Objetivo del ejercicio
+
+El objetivo ha sido crear un programa llamado `loading.py` que demuestre el uso de
+dependencias externas con `pip` y con `Poetry`, y que ademas haga un analisis de
+"Matrix data" usando `numpy`, `pandas` y `matplotlib`.
+
+Como lo he resuelto
+
+1. He creado un script principal en `loading.py`.
+   - El programa intenta importar las librerias necesarias de forma dinamica.
+   - Si faltan dependencias, no se rompe con un error tecnico.
+   - En su lugar, muestra un mensaje claro con instrucciones de instalacion para
+     `pip` y para `Poetry`.
+
+2. He generado los datos con `numpy`.
+   - La consigna pide que el dataset salga de `numpy`, no de listas hardcodeadas.
+   - Por eso uso `numpy.random.default_rng()` para simular 1000 puntos de datos.
+   - Con esos datos construyo una senal, una estabilidad y una media movil.
+
+3. He usado `pandas` para manipular y resumir los datos.
+   - Creo un `DataFrame` con las columnas del analisis.
+   - Calculo estadisticas basicas con `describe()`.
+   - Clasifico los datos en zonas (`critical`, `unstable`, `stable`) con `pd.cut()`.
+
+4. He usado `matplotlib` para la visualizacion.
+   - Se genera una grafica con dos paneles.
+   - El primero muestra la evolucion de la estabilidad y su media movil.
+   - El segundo muestra un conteo por zonas.
+   - La imagen se guarda en `matrix_analysis.png`.
+
+5. He incluido la comparacion entre `pip` y `Poetry`.
+   - El programa imprime un resumen de la diferencia entre ambos gestores.
+   - `requirements.txt` representa el flujo de `pip`.
+   - `pyproject.toml` representa el flujo de `Poetry`.
+
+6. He tratado las dependencias faltantes de forma segura.
+   - Si faltan `numpy`, `pandas` o `matplotlib`, el programa informa del problema.
+   - Tambien indica los comandos para instalar dependencias con `pip` o con `Poetry`.
+   - `requests` se deja como dependencia opcional, porque el enunciado permite usarla
+     solo si se consume una API externa.
+
+Archivos entregados
+
+- `loading.py`: programa principal.
+- `requirements.txt`: dependencias para instalar con `pip`.
+- `pyproject.toml`: configuracion para instalar con `Poetry`.
+
+Comprobaciones realizadas
+
+- He verificado que el script compila con `python3 -m py_compile`.
+- He ejecutado `python3 loading.py` en el entorno actual para comprobar el caso sin
+  dependencias instaladas.
+- El programa responde de forma correcta mostrando instrucciones de instalacion.
+
+Como debe ejecutarse
+
+1. Desde la carpeta del ejercicio:
+   - `cd ex1`
+
+2. Si se quiere probar sin dependencias:
+   - `python3 loading.py`
+   - En este caso el programa detecta que faltan `numpy`, `pandas` y `matplotlib`.
+   - Muestra un mensaje de error controlado con las instrucciones de instalacion.
+
+3. Si se quiere instalar con `pip`:
+   - `pip install -r requirements.txt`
+   - `python3 loading.py`
+   - Con las dependencias instaladas, el programa hace el analisis y genera
+     `matrix_analysis.png`.
+
+4. Si se quiere instalar con `Poetry`:
+   - `poetry install`
+   - `poetry run python loading.py`
+   - La ejecucion se hace dentro del entorno gestionado por Poetry.
+
+5. Ejecucion opcional con API:
+   - `python3 loading.py --api`
+   - Este modo solo añade la linea de `requests` si la libreria esta instalada.
+   - En la version actual no es necesario usar una API externa para completar el
+     ejercicio.
+
+Resumen final
+
+La solucion cumple con la parte de carga de programas porque:
+- usa `numpy` como fuente de los datos,
+- usa `pandas` para analizar los datos,
+- usa `matplotlib` para visualizar los resultados,
+- diferencia entre `pip` y `Poetry`,
+- y gestiona el caso de dependencias ausentes con mensajes utiles.
