@@ -1,0 +1,86 @@
+Ex2 - Accessing the Mainframe
+
+Objetivo del ejercicio
+
+El objetivo ha sido crear un programa llamado `oracle.py` que cargue configuracion
+desde variables de entorno y desde un archivo `.env`, usando `python-dotenv`.
+La idea es mostrar una forma segura de gestionar credenciales y ajustes de
+configuracion sin hardcodear secretos en el codigo.
+
+Como lo he resuelto
+
+1. He usado `python-dotenv` para leer el archivo `.env`.
+   - El programa llama a `load_dotenv()` al inicio.
+   - Esto permite cargar variables locales de desarrollo sin modificar el codigo.
+   - Las variables del entorno real tienen prioridad sobre el archivo `.env`.
+
+2. He definido las variables de configuracion pedidas por el enunciado.
+   - `MATRIX_MODE`
+   - `DATABASE_URL`
+   - `API_KEY`
+   - `LOG_LEVEL`
+   - `ZION_ENDPOINT`
+
+3. He distinguido entre desarrollo y produccion.
+   - Si `MATRIX_MODE=development`, el programa usa valores mas flexibles y muestra
+     un comportamiento orientado al entorno local.
+   - Si `MATRIX_MODE=production`, el programa exige mas claridad en la configuracion
+     y muestra avisos si faltan valores criticos.
+   - Esto se ve directamente en la salida del programa.
+
+4. He añadido control de errores para configuracion faltante.
+   - Si falta `python-dotenv`, el programa muestra un mensaje claro.
+   - Si faltan variables de entorno, el programa no falla de forma brusca.
+   - En su lugar, informa de las ausencias y aplica valores por defecto razonables.
+
+5. He incluido una comprobacion de seguridad.
+   - El script verifica que no haya secretos hardcodeados.
+   - Tambien comprueba que `.env` exista y que este ignorado por Git.
+   - `.env.example` se deja como plantilla segura para configurar el entorno local.
+
+Archivos entregados
+
+- `oracle.py`: programa principal.
+- `.env.example`: plantilla con las variables necesarias.
+- `.gitignore`: evita que `.env` y archivos generados se suban al repositorio.
+
+Como debe ejecutarse
+
+1. Desde la carpeta `ex2`:
+   - `cd ex2`
+
+2. Para probar sin configuracion:
+   - `python3 oracle.py`
+   - Si no existe `python-dotenv`, el programa muestra un error controlado.
+   - Si existe pero no hay variables definidas, se muestran avisos y valores por defecto.
+
+3. Para usar un archivo `.env`:
+   - `cp .env.example .env`
+   - Editar `.env` con valores propios.
+   - `python3 oracle.py`
+   - El programa carga la configuracion del archivo y la muestra en pantalla.
+
+4. Para sobrescribir con variables de entorno:
+   - `MATRIX_MODE=production API_KEY=secret123 python3 oracle.py`
+   - Las variables del entorno tienen prioridad sobre `.env`.
+   - Esto sirve para desplegar sin tocar el archivo local.
+
+5. Para comprobar el modo produccion:
+   - Definir `MATRIX_MODE=production` y completar `DATABASE_URL`, `API_KEY`,
+     `LOG_LEVEL` y `ZION_ENDPOINT`.
+   - La salida debe mostrar que la configuracion es mas estricta y que no faltan
+     valores criticos.
+
+Por que `.env` debe ir en `.gitignore`
+
+- Porque puede contener secretos reales.
+- Porque no debe versionarse informacion sensible.
+- `.env.example` cumple el papel de plantilla sin exponer credenciales reales.
+
+Resumen final
+
+La solucion cumple con el ejercicio porque:
+- usa `python-dotenv` para cargar configuracion,
+- diferencia claramente desarrollo y produccion,
+- permite sobreescritura mediante variables de entorno,
+- y protege el repositorio evitando subir secretos reales.
