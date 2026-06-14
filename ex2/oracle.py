@@ -6,16 +6,13 @@ import sys
 
 try:
     from dotenv import load_dotenv
-except ImportError:  # pragma: no cover - handled at runtime
-    load_dotenv = None
+except ImportError:
+    sys.stderr.write("ERROR: python-dotenv is not installed.\n")
+    sys.stderr.write("Install it with: pip install python-dotenv\n")
+    raise SystemExit(1)
 
 
 def read_env() -> None:
-    if load_dotenv is None:
-        sys.stderr.write("ERROR: python-dotenv is not installed.\n")
-        sys.stderr.write("Install it with: pip install python-dotenv\n")
-        raise SystemExit(1)
-
     load_dotenv(override=False)
 
 
@@ -72,25 +69,35 @@ def environment_warnings(
 ) -> list[str]:
     warnings: list[str] = []
     if raw_mode and mode != raw_mode.lower():
-        warnings.append(f"Invalid MATRIX_MODE '{raw_mode}' detected; defaulting to development.")
+        warnings.append(f"Invalid MATRIX_MODE '{raw_mode}' "
+                        f"detected; defaulting to development.")
     if not database_url:
-        warnings.append("DATABASE_URL is missing; using local instance defaults.")
+        warnings.append("DATABASE_URL is missing;"
+                        " using local instance defaults.")
     if not api_key:
-        warnings.append("API_KEY is missing; API access remains unauthenticated.")
+        warnings.append("API_KEY is missing; "
+                        "API access remains unauthenticated.")
     if not log_level:
-        warnings.append(f"LOG_LEVEL is missing; defaulting to {log_level_status(log_level, mode)}.")
+        warnings.append(f"LOG_LEVEL is missing; defaulting to "
+                        f"{log_level_status(log_level, mode)}.")
     if not zion_endpoint:
-        warnings.append("ZION_ENDPOINT is missing; Zion network falls back to offline mode.")
+        warnings.append("ZION_ENDPOINT is missing; "
+                        "Zion network falls back to offline mode.")
     if mode == "production" and warnings:
-        warnings.append("Production should define all critical configuration values explicitly.")
+        warnings.append("Production should define all "
+                        "critical configuration values explicitly.")
     return warnings
 
 
 def security_check() -> None:
     BASE_DIR = Path(__file__).resolve().parent
-    env_file_exists = os.path.isfile(".env")
-    gitignore_exists = (BASE_DIR.parent / ".gitignore").exists()
-    override_available = any(name in os.environ for name in ("MATRIX_MODE", "DATABASE_URL", "API_KEY", "LOG_LEVEL", "ZION_ENDPOINT"))
+    env_file_exists = (BASE_DIR / ".env").exists()
+    gitignore_exists = (BASE_DIR / ".gitignore").exists()
+    override_available = any(name in os.environ for name in ("MATRIX_MODE",
+                                                             "DATABASE_URL",
+                                                             "API_KEY",
+                                                             "LOG_LEVEL",
+                                                             "ZION_ENDPOINT"))
 
     print("Environment security check:")
     print("[OK] No hardcoded secrets detected")
@@ -99,7 +106,7 @@ def security_check() -> None:
     elif env_file_exists:
         print("[WARN] .env file exists but .gitignore does not ignore it")
     else:
-        print("[WARN] .env file not found; copy .env.example to .env for local development")
+        print("[WARN] .env file not found.")
 
     if override_available:
         print("[OK] Production overrides available")
@@ -109,7 +116,11 @@ def security_check() -> None:
     print("The Oracle sees all configurations.")
 
 
-def print_configuration(mode: str, database_url: str, api_key: str, log_level: str, zion_endpoint: str) -> None:
+def print_configuration(mode: str,
+                        database_url: str,
+                        api_key: str,
+                        log_level: str,
+                        zion_endpoint: str) -> None:
     print("Configuration loaded:")
     print(f"Mode: {mode}")
     print(f"Database: {database_status(mode, database_url)}")
@@ -133,7 +144,12 @@ def main() -> int:
     print()
     print_configuration(mode, database_url, api_key, log_level, zion_endpoint)
 
-    warnings = environment_warnings(mode, raw_mode, database_url, api_key, log_level, zion_endpoint)
+    warnings = environment_warnings(mode,
+                                    raw_mode,
+                                    database_url,
+                                    api_key,
+                                    log_level,
+                                    zion_endpoint)
     if warnings:
         print("Configuration warnings:")
         for warning in warnings:
