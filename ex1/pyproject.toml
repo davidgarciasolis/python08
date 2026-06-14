@@ -2,11 +2,11 @@
 name = "loading-programs"
 version = "0.1.0"
 description = "Matrix-style data analysis exercise demonstrating pip and Poetry"
-authors = ["Codex <codex@example.com>"]
+authors = ["davgarc4"]
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 numpy = "^2.0.0"
 pandas = "^2.2.0"
 matplotlib = "^3.9.0"

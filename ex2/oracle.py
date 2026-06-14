@@ -1,4 +1,5 @@
 from __future__ import annotations
+from pathlib import Path
 
 import os
 import sys
@@ -86,9 +87,9 @@ def environment_warnings(
 
 
 def security_check() -> None:
+    BASE_DIR = Path(__file__).resolve().parent
     env_file_exists = os.path.isfile(".env")
-    env_example_exists = os.path.isfile(".env.example")
-    gitignore_exists = os.path.isfile(".gitignore")
+    gitignore_exists = (BASE_DIR.parent / ".gitignore").exists()
     override_available = any(name in os.environ for name in ("MATRIX_MODE", "DATABASE_URL", "API_KEY", "LOG_LEVEL", "ZION_ENDPOINT"))
 
     print("Environment security check:")
@@ -99,15 +100,13 @@ def security_check() -> None:
         print("[WARN] .env file exists but .gitignore does not ignore it")
     else:
         print("[WARN] .env file not found; copy .env.example to .env for local development")
-    if env_example_exists:
-        print("[OK] .env.example available for safe local setup")
-    else:
-        print("[WARN] .env.example is missing")
 
     if override_available:
-        print("[OK] Environment variables override .env values")
-    else:
         print("[OK] Production overrides available")
+    else:
+        print("[WARN] No production overrides configured")
+    print()
+    print("The Oracle sees all configurations.")
 
 
 def print_configuration(mode: str, database_url: str, api_key: str, log_level: str, zion_endpoint: str) -> None:
@@ -117,6 +116,7 @@ def print_configuration(mode: str, database_url: str, api_key: str, log_level: s
     print(f"API Access: {api_status(api_key)}")
     print(f"Log Level: {log_level_status(log_level, mode)}")
     print(f"Zion Network: {zion_status(zion_endpoint, mode)}")
+    print()
 
 
 def main() -> int:
@@ -130,6 +130,7 @@ def main() -> int:
     zion_endpoint = get_config_value("ZION_ENDPOINT", "")
 
     print("ORACLE STATUS: Reading the Matrix...")
+    print()
     print_configuration(mode, database_url, api_key, log_level, zion_endpoint)
 
     warnings = environment_warnings(mode, raw_mode, database_url, api_key, log_level, zion_endpoint)
@@ -137,6 +138,7 @@ def main() -> int:
         print("Configuration warnings:")
         for warning in warnings:
             print(f"[WARN] {warning}")
+        print()
 
     security_check()
     return 0
