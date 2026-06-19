@@ -1,11 +1,10 @@
+#!/usr/bin/env python3
 import os
 from dotenv import load_dotenv
 
-# Cargar variables desde .env si existe
-load_dotenv()
-
 
 def get_config() -> dict[str, str | None]:
+    load_dotenv()
     config = {
         "MATRIX_MODE": os.getenv("MATRIX_MODE"),
         "DATABASE_URL": os.getenv("DATABASE_URL"),
