@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import os
 from dotenv import load_dotenv
 
@@ -15,15 +14,18 @@ def get_config() -> dict[str, str | None]:
     return config
 
 
-def validate_config(config: dict[str, str | None]) -> bool:
-    missing = [key for key, value in config.items() if not value]
+def validate_config(config: dict[str, str | None]) -> None:
+    missing = []
+
+    for key, value in config.items():
+        if not value:
+            missing.append(key)
 
     if missing:
         print("WARNING: Missing configuration variables:")
         for var in missing:
             print(f" - {var}")
         print()
-    return len(missing) == 0
 
 
 def display_status(config: dict[str, str | None]) -> None:
@@ -37,12 +39,17 @@ def display_status(config: dict[str, str | None]) -> None:
         print("Database: Connected to production instance")
         print("API Access: Authenticated (production)")
         print("Log Level:", config.get("LOG_LEVEL"))
-        print("Zion Network: Secure channel enabled")
-    else:
-        print("Database: Connected to local instance")
-        print("API Access: Authenticated")
+        print("Zion Network: Online")
+    elif mode == "development":
+        print("Database: Connected to development instance")
+        print("API Access: Authenticated (development)")
         print("Log Level:", config.get("LOG_LEVEL"))
         print("Zion Network: Online")
+    else:
+        print("Database: Connected to local instance")
+        print("API Access: Deauthenticated")
+        print("Log Level:", config.get("LOG_LEVEL"))
+        print("Zion Network: Offline")
 
     print("\nEnvironment security check:")
 

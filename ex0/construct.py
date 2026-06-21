@@ -6,14 +6,7 @@ import site
 
 
 def is_virtual_env() -> bool:
-    return (
-        hasattr(sys, 'real_prefix') or
-        (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
-    )
-
-
-def get_venv_name() -> str:
-    return os.path.basename(sys.prefix)
+    return sys.prefix != sys.base_prefix
 
 
 def main() -> None:
@@ -23,7 +16,7 @@ def main() -> None:
         print("MATRIX STATUS: Welcome to the construct")
         print()
         print(f"Current Python: {sys.executable}")
-        print(f"Virtual Environment: {get_venv_name()}")
+        print(f"Virtual Environment: {os.path.basename(sys.prefix)}")
         print(f"Environment Path: {sys.prefix}")
         print()
         print("SUCCESS: You're in an isolated environment!")

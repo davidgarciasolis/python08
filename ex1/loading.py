@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from importlib import import_module
 from types import ModuleType
 from typing import Optional
